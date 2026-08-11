@@ -1,77 +1,77 @@
 # UL30 WhatsApp Appointment Automation
 
-Sistema de automação de processos desenvolvido em Python para tratamento de agendas, preparação e envio de confirmações de consultas e exames, acompanhamento de respostas e atualização dos registros da clínica.
+A Python-based process automation system designed to streamline appointment confirmation workflows by integrating data processing, Google Sheets, messaging APIs, and PostgreSQL.
 
-O projeto foi desenvolvido com foco em **automação de processos, integração entre sistemas, tratamento de dados e redução de atividades operacionais repetitivas**.
+The project was developed with a focus on **process automation, system integration, data processing, operational monitoring, and reduction of repetitive manual tasks**.
 
-> **Nota:** os arquivos de dados presentes neste repositório utilizam informações fictícias e foram disponibilizados exclusivamente para fins demonstrativos e de portfólio.
-
----
-
-## 🎯 Problema
-
-O processo de confirmação de consultas e exames envolvia diversas atividades manuais:
-
-* Exportação da agenda;
-* Tratamento e limpeza dos dados;
-* Validação dos telefones;
-* Identificação dos procedimentos;
-* Agrupamento de pacientes;
-* Envio das mensagens;
-* Acompanhamento das respostas;
-* Atualização do status dos agendamentos;
-* Registro de históricos e erros.
-
-Além de consumir tempo da equipe, processos manuais aumentam a possibilidade de erros e dificultam o acompanhamento dos resultados.
+> **Note:** All data included in this repository is fictional and provided exclusively for demonstration and portfolio purposes. No real patient or company data is exposed.
 
 ---
 
-## 💡 Solução
+## 🎯 Problem
 
-O UL30 WhatsApp Appointment Automation automatiza grande parte desse fluxo.
+Appointment confirmation processes can involve several repetitive manual tasks:
 
-A aplicação recebe os dados da agenda, realiza o tratamento e validação das informações, prepara os dados para envio, integra-se a uma API de mensagens e acompanha os retornos dos pacientes.
+* Exporting appointment schedules;
+* Cleaning and transforming data;
+* Validating phone numbers;
+* Identifying procedures;
+* Grouping appointments by patient;
+* Preparing messages;
+* Tracking responses;
+* Updating appointment statuses;
+* Maintaining operational history.
 
-De acordo com o status recebido, o sistema também pode atualizar ou movimentar o respectivo agendamento no banco de dados.
+These activities can consume significant time and increase the risk of operational errors.
 
 ---
 
-## ⚙️ Principais funcionalidades
+## 💡 Solution
 
-### Tratamento de dados
+The UL30 WhatsApp Appointment Automation automates a significant part of this workflow.
 
-* Leitura de arquivos CSV utilizando Pandas;
-* Conversão e padronização de datas e horários;
-* Filtragem de agendamentos;
-* Remoção de registros que não devem participar do processo;
-* Validação de prontuários;
-* Validação e normalização de telefones;
-* Identificação de telefones inválidos;
-* Geração de arquivo para revisão dos dados inconsistentes.
+The application processes appointment data, validates and transforms records, prepares the information for messaging, integrates with an external API, and monitors the resulting statuses.
 
-### Processamento de procedimentos
+Based on the returned status, the system can also update or move the corresponding appointment records in the PostgreSQL database.
 
-O sistema identifica diferentes tipos de procedimentos e monta uma descrição adequada para o envio.
+---
 
-Consultas podem ser identificadas como:
+## ⚙️ Main Features
+
+### Data Processing
+
+* CSV data ingestion using Pandas;
+* Date and time normalization;
+* Appointment filtering;
+* Removal of records that should not participate in the process;
+* Patient record validation;
+* Phone number validation and normalization;
+* Identification of invalid phone numbers;
+* Generation of files containing invalid records for later review.
+
+### Procedure Processing
+
+The system identifies different types of procedures and generates an appropriate description for messaging.
+
+Appointments can be formatted as:
 
 ```text
-Consulta Dr(a) Nome do Profissional
+Consultation with Dr. Professional Name
 ```
 
-Enquanto exames podem ser apresentados como:
+while examinations can be represented as:
 
 ```text
-Exame Nome do Procedimento
+Exam Procedure Name
 ```
 
-Também é realizado o agrupamento de procedimentos pelo número do prontuário para evitar o envio de múltiplas mensagens para o mesmo paciente.
+Procedures are also grouped by patient record number to avoid sending multiple messages to the same patient.
 
-### Integração com Google Sheets
+### Google Sheets Integration
 
-A aplicação utiliza o Google Sheets como uma camada de controle dos agendamentos.
+Google Sheets is used as an operational control layer for appointment records.
 
-Os registros possuem status que permitem acompanhar o processamento:
+The workflow uses statuses such as:
 
 ```text
 PENDING
@@ -83,151 +83,151 @@ CANCELLED
 ERROR
 ```
 
-O sistema também realiza backup dos dados antes da atualização da planilha.
+The system also maintains historical records before updating the operational spreadsheet.
 
-### Envio em lotes
+### Batch Processing
 
-Os dados preparados são enviados para o servidor em lotes, reduzindo a quantidade de requisições individuais.
+Patient data is sent to the server in batches instead of making one request per patient.
 
-O tamanho padrão configurado atualmente é:
+The current batch size is:
 
 ```text
-50 registros por lote
+50 records per batch
 ```
 
-### Atualização do banco de dados
+### Database Integration
 
-A partir do retorno do processo de confirmação, o sistema pode executar diferentes ações no banco de dados.
+Based on the resulting appointment status, the application can perform different operations against the PostgreSQL database.
 
-Por exemplo:
+For example:
 
 ```text
 CONFIRMED
     ↓
-Atualização do agendamento
+Update appointment
 
 CANCELLED
     ↓
-Movimentação do agendamento
+Move appointment
 ```
 
-### Dashboard
+### Desktop Dashboard
 
-A aplicação possui uma interface gráfica desenvolvida com Tkinter/ttkbootstrap para acompanhamento da operação.
+The application includes a desktop interface built with Tkinter and ttkbootstrap.
 
-O dashboard apresenta:
+The dashboard provides:
 
-* Total de pacientes;
-* Pacientes confirmados;
-* Pacientes cancelados;
-* Pacientes pendentes;
-* Próxima sincronização;
-* Logs da aplicação.
+* Total patients;
+* Confirmed appointments;
+* Cancelled appointments;
+* Pending appointments;
+* Next synchronization countdown;
+* System logs.
 
-### Logs
+### Logging
 
-O sistema possui logging estruturado com:
+The application includes structured logging with:
 
-* Logs exibidos na interface;
-* Arquivos de log;
-* Rotação automática dos arquivos;
-* Retenção dos logs históricos.
+* Logs displayed in the desktop interface;
+* File-based logging;
+* Automatic log rotation;
+* Historical log retention.
 
 ---
 
-## 🏗️ Arquitetura
+## 🏗️ Architecture
 
-O fluxo principal da aplicação pode ser representado da seguinte forma:
+The main workflow can be represented as follows:
 
 ```text
 ┌──────────────────────┐
-│    Agenda da Clínica │
+│  Clinic Appointment  │
+│       Schedule       │
 └──────────┬───────────┘
            │
            ▼
 ┌──────────────────────┐
 │       Pandas         │
-│ Tratamento dos dados │
+│   Data Processing    │
 └──────────┬───────────┘
            │
-           ├──────────────► Validação de telefones
+           ├──────────────► Phone validation
            │
-           ├──────────────► Validação de prontuário
+           ├──────────────► Patient validation
            │
-           └──────────────► Identificação de procedimentos
+           └──────────────► Procedure processing
            │
            ▼
 ┌──────────────────────┐
 │    Google Sheets     │
-│ Controle de status   │
+│   Status Management  │
 └──────────┬───────────┘
            │
            ▼
 ┌──────────────────────┐
-│    Servidor / API    │
-│      Mensagens       │
+│      Server / API    │
+│      Messaging       │
 └──────────┬───────────┘
            │
            ▼
       ┌─────────┐
-      │Paciente │
+      │ Patient │
       └────┬────┘
            │
            ▼
 ┌──────────────────────┐
-│       Status         │
-│ Confirmado/Cancelado │
+│        Status        │
+│ Confirmed / Cancelled│
 └──────────┬───────────┘
            │
            ▼
 ┌──────────────────────┐
 │      PostgreSQL      │
-│ Atualização da agenda│
+│ Appointment Updates  │
 └──────────────────────┘
 ```
 
-A aplicação também possui uma interface gráfica independente do processamento principal:
+The application also separates the graphical interface from the main automation process:
 
 ```text
 ┌──────────────────────┐
-│      Interface       │
+│    Desktop UI        │
 │   Tkinter/ttkbootstrap│
 └──────────┬───────────┘
            │
            ▼
-        STATE
+        Application
+          State
            ▲
            │
 ┌──────────┴───────────┐
-│  Automação Principal │
+│ Automation Process   │
 └──────────────────────┘
 ```
 
-O processamento executado em background não atualiza diretamente os componentes do Tkinter. As mensagens de log são encaminhadas através de uma `Queue` e processadas pela thread principal da interface.
-
-Essa abordagem evita operações inseguras diretamente nos widgets do Tkinter.
+Background tasks are executed separately from the Tkinter main loop, while communication with the interface is handled through a controlled state and logging mechanism.
 
 ---
 
-## 🛠️ Tecnologias utilizadas
+## 🛠️ Technologies
 
-| Tecnologia              | Utilização                                   |
-| ----------------------- | -------------------------------------------- |
-| Python                  | Linguagem principal                          |
-| Pandas                  | Tratamento e transformação de dados          |
-| Google Sheets / gspread | Controle e armazenamento operacional         |
-| PostgreSQL              | Persistência e atualização dos agendamentos  |
-| Requests                | Comunicação com APIs HTTP                    |
-| Tkinter                 | Interface gráfica                            |
-| ttkbootstrap            | Estilização da interface                     |
-| Threading               | Execução de tarefas em background            |
+| Technology              | Purpose                            |
+| ----------------------- | ---------------------------------- |
+| Python                  | Main programming language          |
+| Pandas                  | Data processing and transformation |
+| Google Sheets / gspread | Operational data management        |
+| PostgreSQL              | Database persistence               |
+| Requests                | HTTP API communication             |
+| Tkinter                 | Desktop graphical interface        |
+| ttkbootstrap            | UI styling                         |
+| Threading               | Background task execution          |
 | Queue                   | Comunicação segura entre threads e interface |
-| PyInstaller             | Empacotamento da aplicação                   |
-| Git                     | Controle de versão                           |
+| PyInstaller             | Application packaging              |
+| Git                     | Version control                    |
 
 ---
 
-## 📁 Estrutura do projeto
+## 📁 Project Structure
 
 ```text
 ul30-whatsapp-appointment-automation/
@@ -255,115 +255,113 @@ ul30-whatsapp-appointment-automation/
 └── ul30_diario.spec
 ```
 
-Os arquivos `credentials.json`, logs e outras informações sensíveis não fazem parte do repositório.
+Sensitive credentials, logs, build artifacts, and other environment-specific files are excluded from version control.
 
 ---
 
-## 🔐 Segurança
+## 🔐 Security
 
-Informações sensíveis utilizadas pela aplicação não devem ser versionadas no Git.
+Sensitive information should never be committed to the repository.
 
-Entre elas:
+This includes:
 
-* Credenciais de Service Account;
-* Senhas de banco de dados;
-* Tokens de APIs;
-* IDs reais de clientes;
-* Dados reais de pacientes.
+* Service account credentials;
+* Database passwords;
+* API tokens;
+* Real client identifiers;
+* Patient information.
 
-Para o repositório de demonstração, foram utilizados dados fictícios.
+The repository contains only fictional demonstration data.
 
-Em um ambiente de produção, essas informações devem ser armazenadas através de mecanismos apropriados de configuração e gerenciamento de segredos.
+In a production environment, credentials and secrets should be managed through appropriate configuration and secret-management mechanisms.
 
 ---
 
-## 🚀 Configuração
+## 🚀 Setup
 
-### 1. Clone o repositório
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/LeonardoAlmeida1/ul30-whatsapp-appointment-automation.git
 cd ul30-whatsapp-appointment-automation
 ```
 
-### 2. Crie um ambiente virtual
+### 2. Create a virtual environment
 
 ```bash
 python -m venv .venv
 ```
 
-No Windows:
+On Windows:
 
 ```bash
 .venv\Scripts\activate
 ```
 
-### 3. Instale as dependências
+### 3. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Configure as integrações
+### 4. Configure integrations
 
-Para executar o sistema completo em um ambiente próprio, é necessário configurar:
+To run the complete workflow in a custom environment, the following components must be configured:
 
-* Credenciais do Google Sheets;
-* Planilha utilizada pela aplicação;
-* Banco PostgreSQL;
-* Endpoint da API de mensagens;
-* Identificador da clínica;
-* Demais parâmetros específicos do ambiente.
+* Google Sheets credentials;
+* Google Spreadsheet;
+* PostgreSQL database;
+* Messaging API endpoint;
+* Clinic identifier;
+* Environment-specific parameters.
 
-As informações sensíveis devem permanecer fora do controle de versão.
+Sensitive configuration should remain outside version control.
 
 ---
 
-## 📊 Fluxo operacional
+## 🔄 Operational Flow
 
-O processo principal segue aproximadamente este fluxo:
+The main workflow follows these steps:
 
 ```text
-1. Iniciar aplicação
+1. Start application
         ↓
-2. Verificar cliente
+2. Validate client
         ↓
-3. Ler agenda
+3. Read appointment data
         ↓
-4. Processar dados
+4. Process and clean data
         ↓
-5. Validar registros
+5. Validate records
         ↓
-6. Agrupar pacientes
+6. Group patient procedures
         ↓
-7. Atualizar Google Sheets
+7. Update Google Sheets
         ↓
-8. Enviar dados para API
+8. Send data to API
         ↓
-9. Aguardar retorno dos status
+9. Monitor returned statuses
         ↓
-10. Processar confirmações/cancelamentos
+10. Process confirmations/cancellations
         ↓
-11. Atualizar banco de dados
+11. Update PostgreSQL
         ↓
-12. Registrar histórico e logs
+12. Store history and logs
 ```
 
 ---
 
-## 🧩 Decisões técnicas
+## 🧩 Technical Decisions
 
-Durante o desenvolvimento foram adotadas algumas decisões para melhorar a estabilidade da aplicação.
+During development, certain decisions were made to improve the application's stability.
 
-### Processamento em background
+### Background Processing
 
-Operações que podem levar tempo são executadas utilizando `threading`, evitando o bloqueio da interface gráfica.
+Long-running operations are executed using background threads to prevent the graphical interface from becoming unresponsive.
 
-### Comunicação entre threads
+### Thread-safe Logging
 
-Os logs produzidos pela automação são enviados para uma `Queue`.
-
-A interface utiliza `after()` para consumir essas mensagens dentro da thread principal do Tkinter.
+Log messages generated by background tasks are placed into a queue.Queue. The Tkinter event loop periodically consumes the queue using app.after(), preventing worker threads from directly manipulating UI widgets.
 
 ```text
 Worker
@@ -381,68 +379,75 @@ Tkinter.after()
 Interface
 ```
 
-### Processamento em lotes
+### Batch Processing
 
-O envio dos pacientes para o servidor utiliza lotes de registros para reduzir o número de requisições individuais.
+Patient records are sent to the server in batches, reducing the number of individual HTTP requests.
 
-### Separação de estado e interface
+### Separation of State and UI
 
-O estado operacional do sistema foi separado dos componentes visuais da aplicação, reduzindo o acoplamento entre a automação e a interface gráfica.
+Application state is separated from the graphical interface components, reducing coupling between the automation logic and the UI.
 
----
+### Logging and Monitoring
 
-## 🔄 Melhorias futuras
+The system uses Python's logging infrastructure with separate handlers for file persistence and UI presentation.
 
-Possíveis evoluções do projeto:
-
-* [ ] Centralizar configurações em arquivo seguro;
-* [ ] Melhorar gerenciamento de credenciais;
-* [ ] Implementar testes automatizados;
-* [ ] Adicionar tratamento mais detalhado de erros de API;
-* [ ] Implementar retry automático para falhas temporárias;
-* [ ] Melhorar observabilidade e métricas;
-* [ ] Criar camada de serviços para integrações externas;
-* [ ] Separar módulos de banco, API e Google Sheets;
-* [ ] Criar testes de integração;
-* [ ] Melhorar o sistema de filas;
-* [ ] Criar documentação técnica da API;
-* [ ] Evoluir o dashboard com métricas operacionais.
+Logs are rotated automatically and historical files are retained for operational troubleshooting.
 
 ---
 
-## 📌 Status do projeto
+## 🔄 Future Improvements
 
-**Projeto funcional / em evolução.**
+Possible future improvements include:
 
-Este repositório representa uma versão de demonstração baseada em uma automação desenvolvida para um cenário real de operação, com dados e identificadores substituídos para fins de portfólio.
-
-O projeto continua em evolução com foco em:
-
-* qualidade de código;
-* arquitetura;
-* segurança;
-* testes;
-* observabilidade;
-* documentação;
-* escalabilidade.
+* [ ] Centralize application configuration;
+* [ ] Improve credential management;
+* [ ] Add automated tests;
+* [ ] Implement retry strategies for temporary API failures;
+* [ ] Improve API error handling;
+* [ ] Add operational metrics;
+* [ ] Further separate database, API, and Google Sheets services;
+* [ ] Add integration tests;
+* [ ] Improve queue management;
+* [ ] Create API documentation;
+* [ ] Improve dashboard analytics;
+* [ ] Add structured configuration for different clients.
 
 ---
 
-## 👨‍💻 Autor
+## 📌 Project Status
+
+**Functional project / continuously evolving.**
+
+This repository represents a demonstration version of an automation solution originally developed for a real operational scenario.
+
+All company identifiers, credentials, and sensitive data have been replaced or removed for portfolio purposes.
+
+The project is being continuously improved with a focus on:
+
+* Code quality;
+* Software architecture;
+* Security;
+* Testing;
+* Observability;
+* Documentation;
+* Scalability.
+
+---
+
+## 👨‍💻 Author
 
 **Leonardo Silva de Almeida**
 
-Desenvolvedor Python Júnior com experiência em automação de processos, integração de sistemas, tratamento de dados e desenvolvimento de aplicações.
+Python Developer focused on **Automation and Data**, with hands-on experience in process automation, data processing, system integration, APIs, databases, and business intelligence.
 
-**Interesses profissionais:**
+### Career Focus
 
-* Desenvolvimento Python;
-* Automação de processos;
-* Engenharia de dados;
-* BI e análise de dados;
-* Integração de APIs;
-* Desenvolvimento de sistemas.
+* Junior Python Developer
+* Junior Data / BI Analyst
+* Process Automation
+* Data Analysis
+* System Integration
 
-[GitHub](https://github.com/LeonardoAlmeida1)
+🔗 [GitHub](https://github.com/LeonardoAlmeida1)
 
-[LinkedIn](https://www.linkedin.com/in/leonardo-silva-de-almeida-8416221b5/)
+🔗 [LinkedIn](https://www.linkedin.com/in/leonardo-silva-de-almeida-8416221b5/)
