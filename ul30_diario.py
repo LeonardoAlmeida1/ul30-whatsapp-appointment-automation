@@ -9,7 +9,6 @@ import time
 #import logging
 import subprocess, shutil
 import random
-import keyboard
 import requests
 import traceback
 
@@ -46,19 +45,18 @@ def verificar_cliente_ativo(chave):
                 
                 if status == "inativo":
                     logger.error("Erro1: Entre em contato com o suporte TELEFONE_SUPORTE")
-                    sys.exit(0)  # Bloqueia o robô
+                    return False  # Bloqueia o robô
                 
                 return True
 
         # Se não encontrou a chave
         logger.error("Erro2: Entre em contato com o suporte TELEFONE_SUPORTE.")
-        sys.exit(0)
+        return False
 
     except Exception as e:
         logger.error(f"Erro3: Entre em contato com o suporte TELEFONE_SUPORTE. {e}")
-        sys.exit(0)
         return False
-verificar_cliente_ativo(CHAVE)
+
 #FIM PROCESSO DE AUTENTICAÇÃO
 
 codigos_consultas = ['10101012', '50000462', '50000560', '50001221']
@@ -500,6 +498,10 @@ def atualizar_banco(prontuario, data, status):
 # INÍCIO DO SCRIPT PRINCIPAL
 def iniciar_automacao():
     logger.info("🚀 Sistema iniciado!")
+    if not verificar_cliente_ativo(CHAVE):
+        logger.error("Cliente não autorizado.")
+        return
+    
     logger.info("""
     ========================================
     Status: Online
