@@ -12,6 +12,7 @@ import requests
 import traceback
 
 from services.database import atualizar_banco
+from services.phone import tratar_telefone_e_motivo
 
 import pandas as pd
 import urllib
@@ -175,32 +176,6 @@ def formatar_csv():
     time.sleep(2)
     return dados
 
-def tratar_telefone_e_motivo(telefone):
-    if pd.isna(telefone):
-        time.sleep(0.1)
-        return None, "telefone ausente"
-
-    telefone_limpo = ''.join(filter(str.isdigit, str(telefone)))
-
-    if len(telefone_limpo) == 11:
-        time.sleep(0.1)
-        return '55' + telefone_limpo, None  # válido
-
-    elif len(telefone_limpo) == 9 and telefone_limpo.startswith('9'):
-        # Número sem DDD, mas válido — assume DDD 11
-        time.sleep(0.1)
-        return '5511' + telefone_limpo, None
-
-    elif len(telefone_limpo) == 10:
-        time.sleep(0.1)
-        return None, "possível telefone fixo"
-
-    elif len(telefone_limpo) < 9:
-        time.sleep(0.1)
-        return None, "incompleto ou sem DDD"
-
-    else:
-        return None, "formato inválido ou dígitos extras"
 def salvar_telefones_invalidos(dados_invalidos, arquivo="./Arquivos/Erros/telefones_para_revisao.xlsx"):
     # Se o arquivo já existe, lê e concatena
     if os.path.exists(arquivo):
@@ -228,7 +203,7 @@ def formatar_item(row):
         return f"Consulta Dr(a) {medico}"
     else:
         return f"Exame {procedimento}"
-    
+
 def enviar_agenda_do_dia_para_sheets(df: pd.DataFrame,
                                      nome_planilha: str = "NOME_DA_PLANILHA",
                                      aba: str = None,
