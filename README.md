@@ -221,7 +221,7 @@ Background tasks are executed separately from the Tkinter main loop, while commu
 | Tkinter                 | Desktop graphical interface        |
 | ttkbootstrap            | UI styling                         |
 | Threading               | Background task execution          |
-| Queue                   | Comunicação segura entre threads e interface |
+| Queue                   | Secure communication between threads and the interface |
 | PyInstaller             | Application packaging              |
 | Git                     | Version control                    |
 
