@@ -235,15 +235,25 @@ ul30-whatsapp-appointment-automation/
 ├── Arquivos/
 │   ├── Erros/
 │   │   └── telefones_para_revisao.xlsx
-│   │
 │   ├── Relatorios/
 │   │   └── Historico_Geral.xlsx
-│   │
 │   └── confirmacao.csv
+│
+├── services/
+│   ├── __init__.py
+│   ├── database.py
+│   └── phone.py
 │
 ├── System/
 │   ├── config.py
 │   └── state.py
+│
+├── tests/
+│   ├── test_chunk_list.py
+│   ├── test_formatar_csv.py
+│   ├── test_formatar_item.py
+│   ├── test_processar_telefone.py
+│   └── test_telefone.py
 │
 ├── .gitignore
 ├── icon.ico
@@ -395,13 +405,40 @@ Logs are rotated automatically and historical files are retained for operational
 
 ---
 
+## 🧪 Automated Tests
+
+The project includes automated tests built with **pytest** to validate core business rules and data-processing behavior.
+
+Current test coverage includes:
+
+- Phone number validation and normalization;
+- Patient data formatting;
+- Appointment CSV processing;
+- Removal of appointments marked as not eligible for messaging;
+- Business-hour filtering;
+- Removal of records with missing patient identifiers;
+- Batch processing utilities.
+
+Run the test suite with:
+
+```bash
+pytest
+```
+
+Current status:
+
+```text
+21 tests passed
+```
+
+The test suite has also been used to identify and fix edge cases, such as safely handling appointment datasets that become empty after validation and filtering.
+
 ## 🔄 Future Improvements
 
 Possible future improvements include:
 
 * [ ] Centralize application configuration;
 * [ ] Improve credential management;
-* [ ] Add automated tests;
 * [ ] Implement retry strategies for temporary API failures;
 * [ ] Improve API error handling;
 * [ ] Add operational metrics;
