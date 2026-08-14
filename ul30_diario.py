@@ -139,6 +139,17 @@ def formatar_csv():
 
     df_grouped = df_grouped.sort_values(by="hora", ascending=True)
     dados = df_grouped
+    if dados.empty:
+        logger.info("Nenhum agendamento válido encontrado após os filtros.")
+
+        return pd.DataFrame(columns=[
+            "Nome",
+            "Telefone",
+            "Prontuário",
+            "Data",
+            "Hora",
+            "Exames"
+        ])
     logger.debug("Vou tratar os telefones agora, se eu encontrar algum inválido, vou separar para revisar depois.")
     # Salvar telefone original antes do tratamento
     dados['telefone_original'] = dados['telefone']
